@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Northline – Supply Chain</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef1f3;--surf:#fff;--ink:#14212b;--mute:#5b6b78;--line:#d5dce1;--acc:#1f5f8b;--accink:#fff;--warn:#945800;--warnbg:#fff1d6;--bad:#b3261e;--badbg:#fde4e1;--ok:#17693f;--okbg:#dcf3e6;--infobg:#dbeaf5;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f171d;--surf:#17222a;--ink:#e6edf1;--mute:#93a4b0;--line:#2b3a45;--acc:#5fa8d9;--accink:#0b1318;--warn:#f0b349;--warnbg:#3a2c0e;--bad:#f28b82;--badbg:#3d1a17;--ok:#6fd49b;--okbg:#12311f;--infobg:#142a3a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f171d;--surf:#17222a;--ink:#e6edf1;--mute:#93a4b0;--line:#2b3a45;--acc:#5fa8d9;--accink:#0b1318;--warn:#f0b349;--warnbg:#3a2c0e;--bad:#f28b82;--badbg:#3d1a17;--ok:#6fd49b;--okbg:#12311f;--infobg:#142a3a;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 Barlow,system-ui,sans-serif}
+.wrap{max-width:1080px;margin:0 auto;padding:16px}
+h1,h2,.num{font-family:"Barlow Condensed",Barlow,sans-serif;font-weight:700;letter-spacing:.01em}
+h1{font-size:30px;margin:0}
+h2{font-size:21px;margin:0 0 10px}
+header{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+header p{margin:0;color:var(--mute)}
+nav{display:flex;gap:4px;overflow-x:auto;border-bottom:2px solid var(--line);margin-bottom:18px}
+nav button{background:none;border:0;border-bottom:3px solid transparent;margin-bottom:-2px;padding:10px 14px;font:600 15px Barlow,sans-serif;color:var(--mute);cursor:pointer;white-space:nowrap}
+nav button.on{color:var(--acc);border-color:var(--acc)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.card{background:var(--surf);border:1px solid var(--line);border-radius:6px;padding:14px}
+.grid{display:grid;gap:12px}
+.kpis{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin-bottom:14px}
+.kpi .num{font-size:34px;line-height:1}
+.kpi span{color:var(--mute);font-size:13px}
+.two{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.cats{grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
+.pipe{display:flex;height:30px;border-radius:4px;overflow:hidden;margin:8px 0 10px;background:var(--line)}
+.pipe i{display:flex;align-items:center;justify-content:center;font:700 13px "Barlow Condensed",sans-serif;color:#fff;font-style:normal}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--mute)}
+.legend b{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px}
+.tools{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;align-items:center}
+input,select{font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:5px;background:var(--surf);color:var(--ink);min-width:0}
+.btn{font:600 14px Barlow,sans-serif;padding:8px 12px;border-radius:5px;border:1px solid var(--acc);background:var(--acc);color:var(--accink);cursor:pointer}
+.btn.g{background:none;color:var(--acc)}
+.btn.d{background:none;border-color:var(--line);color:var(--bad)}
+.btn.s{padding:4px 8px;font-size:13px}
+.chip{padding:5px 11px;border:1px solid var(--line);border-radius:99px;background:var(--surf);color:var(--ink);font:500 13px Barlow,sans-serif;cursor:pointer}
+.chip.on{background:var(--acc);border-color:var(--acc);color:var(--accink)}
+.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:640px}
+th{text-align:left;font-size:13px;color:var(--mute);font-weight:600;padding:8px;border-bottom:2px solid var(--line)}
+td{padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:middle}
+td small{color:var(--mute);display:block}
+.tag{display:inline-block;padding:2px 8px;border-radius:99px;font-size:12px;font-weight:600}
+.ok{background:var(--okbg);color:var(--ok)}.warn{background:var(--warnbg);color:var(--warn)}.bad{background:var(--badbg);color:var(--bad)}.info{background:var(--infobg);color:var(--acc)}
+.lvl{height:6px;background:var(--line);border-radius:3px;margin-top:4px;width:90px}
+.lvl i{display:block;height:100%;border-radius:3px;background:var(--acc)}
+.lvl i.warn{background:#d98c00}.lvl i.bad{background:var(--bad)}
+.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-bottom:14px}
+.order{margin-bottom:10px}
+.ohead{display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px}
+.steps{display:flex;margin:14px 4px 6px}
+.steps div{flex:1;position:relative;text-align:center;font-size:12px;color:var(--mute)}
+.steps div:before{content:"";position:absolute;top:6px;left:-50%;width:100%;height:3px;background:var(--line)}
+.steps div:first-child:before{display:none}
+.steps div u{display:block;width:15px;height:15px;border-radius:50%;background:var(--line);margin:0 auto 4px;position:relative;z-index:1;text-decoration:none}
+.steps div.done{color:var(--ink)}.steps div.done:before,.steps div.done u{background:var(--acc)}
+.oact{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.empty{padding:24px;text-align:center;color:var(--mute)}
+li{margin-bottom:6px}ul{padding-left:0;list-style:none;margin:0}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--line)}
+@media(max-width:520px){h1{font-size:25px}.wrap{padding:12px}.steps div{font-size:11px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><h1>Northline Supply Chain</h1><p>Inventory, orders, categories and suppliers in one place</p></header>
+<nav id="nav"></nav>
+<main id="main"></main>
+</div>
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money=n=>'$'+Number(n).toLocaleString('en-US',{maximumFractionDigits:0});
+const ST=['Placed','Packed','Shipped','Out for delivery','Delivered'];
+const COL={Placed:'#6b7c8a',Packed:'#8a6fc7',Shipped:'#1f5f8b','Out for delivery':'#c47a00',Delivered:'#1b7a4b',Cancelled:'#b3261e'};
+const seed={n:1050,
+cats:['Electronics','Raw Materials','Packaging','Apparel','Food & Beverage','Tools'],
+sup:[{n:'Shenzhen Circuits',lead:21,ot:94},{n:'Atlas Metals',lead:9,ot:97},{n:'PackRight',lead:5,ot:99},{n:'Loom & Co',lead:14,ot:91},{n:'FreshLink Foods',lead:3,ot:96},{n:'ToolForge',lead:12,ot:93}],
+items:[
+{id:'SKU-1001',name:'Barcode scanner X2',cat:'Electronics',sup:'Shenzhen Circuits',qty:42,min:20,price:129},
+{id:'SKU-1002',name:'Lithium battery pack',cat:'Electronics',sup:'Shenzhen Circuits',qty:8,min:25,price:46},
+{id:'SKU-1003',name:'Steel sheet 2mm',cat:'Raw Materials',sup:'Atlas Metals',qty:310,min:100,price:38},
+{id:'SKU-1004',name:'Aluminium coil',cat:'Raw Materials',sup:'Atlas Metals',qty:0,min:40,price:92},
+{id:'SKU-1005',name:'Corrugated box 40x30',cat:'Packaging',sup:'PackRight',qty:1200,min:500,price:1},
+{id:'SKU-1006',name:'Bubble wrap roll',cat:'Packaging',sup:'PackRight',qty:35,min:30,price:14},
+{id:'SKU-1007',name:'Cotton tee, white (M)',cat:'Apparel',sup:'Loom & Co',qty:160,min:80,price:7},
+{id:'SKU-1008',name:'Work jacket, navy (L)',cat:'Apparel',sup:'Loom & Co',qty:22,min:30,price:41},
+{id:'SKU-1009',name:'Olive oil 5L',cat:'Food & Beverage',sup:'FreshLink Foods',qty:75,min:40,price:33},
+{id:'SKU-1010',name:'Sparkling water, case',cat:'Food & Beverage',sup:'FreshLink Foods',qty:210,min:120,price:9},
+{id:'SKU-1011',name:'Cordless drill 18V',cat:'Tools',sup:'ToolForge',qty:28,min:15,price:84},
+{id:'SKU-1012',name:'Torque wrench set',cat:'Tools',sup:'ToolForge',qty:11,min:12,price:120}],
+orders:[
+{id:'SO-2041',type:'Sales',party:'Meridian Retail',item:'SKU-1001',qty:10,status:'Shipped',eta:'2026-11-14'},
+{id:'SO-2042',type:'Sales',party:'Hale Construction',item:'SKU-1011',qty:6,status:'Packed',eta:'2026-11-16'},
+{id:'SO-2043',type:'Sales',party:'Corner Pantry Co.',item:'SKU-1010',qty:40,status:'Out for delivery',eta:'2026-11-10'},
+{id:'SO-2044',type:'Sales',party:'Urban Threads',item:'SKU-1007',qty:60,status:'Placed',eta:'2026-11-18'},
+{id:'PO-1187',type:'Purchase',party:'Atlas Metals',item:'SKU-1004',qty:80,status:'Shipped',eta:'2026-11-13'},
+{id:'PO-1188',type:'Purchase',party:'Shenzhen Circuits',item:'SKU-1002',qty:100,status:'Packed',eta:'2026-11-30'},
+{id:'SO-2039',type:'Sales',party:'Hale Construction',item:'SKU-1003',qty:50,status:'Delivered',eta:'2026-11-06'},
+{id:'PO-1185',type:'Purchase',party:'PackRight',item:'SKU-1005',qty:600,status:'Delivered',eta:'2026-11-04'}]};
+let S=null;
+try{S=JSON.parse(localStorage.getItem('northline-v1'))}catch(e){}
+if(!S||!S.items)S=JSON.parse(JSON.stringify(seed));
+const save=()=>{try{localStorage.setItem('northline-v1',JSON.stringify(S))}catch(e){}};
+let view='over',fc='All',q='',os='All';
+const TABS=[['over','Overview'],['inv','Inventory'],['ord','Orders'],['cat','Categories'],['sup','Suppliers']];
+const item=id=>S.items.find(i=>i.id===id);
+const status=i=>i.qty===0?['Out of stock','bad']:i.qty<=i.min?['Low stock','warn']:['In stock','ok'];
+const opts=(l,sel)=>l.map(x=>`<option${x===sel?' selected':''}>${esc(x)}</option>`).join('');
+const open=o=>o.status!=='Delivered'&&o.status!=='Cancelled';
+const val=v=>$('#'+v).value.trim();
+function go(v){view=v;render()}
+function render(){
+ $('#nav').innerHTML=TABS.map(t=>`<button class="${t[0]===view?'on':''}" onclick="go('${t[0]}')">${t[1]}</button>`).join('');
+ $('#main').innerHTML=V[view]();
+}
+const V={
+over(){
+ const low=S.items.filter(i=>i.qty<=i.min),ops=S.orders.filter(open);
+ const cnt=k=>S.orders.filter(o=>o.status===k).length,tot=S.orders.length||1;
+ const keys=[...ST,'Cancelled'];
+ return `<div class="grid kpis">
+ <div class="card kpi"><div class="num">${S.items.length}</div><span>Products tracked</span></div>
+ <div class="card kpi"><div class="num">${money(S.items.reduce((a,i)=>a+i.qty*i.price,0))}</div><span>Stock value</span></div>
+ <div class="card kpi"><div class="num" style="color:var(--bad)">${low.length}</div><span>Need reordering</span></div>
+ <div class="card kpi"><div class="num">${ops.length}</div><span>Open orders</span></div></div>
+ <div class="card" style="margin-bottom:12px"><h2>Order pipeline</h2>
+ <div class="pipe">${keys.filter(k=>cnt(k)).map(k=>`<i style="width:${cnt(k)/tot*100}%;background:${COL[k]}">${cnt(k)}</i>`).join('')}</div>
+ <div class="legend">${keys.map(k=>`<span><b style="background:${COL[k]}"></b>${k} (${cnt(k)})</span>`).join('')}</div></div>
+ <div class="grid two"><div class="card"><h2>Low and out-of-stock</h2>
+ ${low.length?`<ul>${low.map(i=>`<li class="row"><span>${esc(i.name)}<small style="display:block;color:var(--mute)">${i.qty} left, reorder at ${i.min}</small></span><button class="btn s" onclick="reorder('${i.id}')">Reorder</button></li>`).join('')}</ul>`:'<div class="empty">Everything is above its reorder level.</div>'}</div>
+ <div class="card"><h2>Arriving soon</h2>
+ ${ops.length?`<ul>${[...ops].sort((a,b)=>a.eta>b.eta?1:-1).slice(0,6).map(o=>`<li class="row"><span>${o.id} · ${esc(o.party)}<small style="display:block;color:var(--mute)">${o.qty} × ${esc(item(o.item)?.name||o.item)}, due ${o.eta}</small></span><span class="tag info">${o.status}</span></li>`).join('')}</ul>`:'<div class="empty">No open orders.</div>'}</div></div>`},
+inv(){
+ const cs=['All',...S.cats];
+ return `<div class="tools"><input id="q" placeholder="Search name or SKU" value="${esc(q)}" oninput="q=this.value;$('#list').innerHTML=invList()">
+ ${cs.map(c=>`<button class="chip ${c===fc?'on':''}" onclick="fc='${esc(c).replace(/&amp;/g,'&')}';render()">${esc(c)}</button>`).join('')}</div>
+ <details class="card" style="margin-bottom:12px"><summary style="cursor:pointer;font-weight:600">Add a product</summary><div class="form" style="margin:12px 0 0">
+ <input id="n_name" placeholder="Product name"><select id="n_cat">${opts(S.cats)}</select><select id="n_sup">${opts(S.sup.map(s=>s.n))}</select>
+ <input id="n_qty" type="number" min="0" placeholder="Quantity"><input id="n_min" type="number" min="0" placeholder="Reorder level"><input id="n_price" type="number" min="0" step="0.01" placeholder="Unit price">
+ <button class="btn" onclick="addItem()">Add product</button></div></details>
+ <div class="card scroll"><div id="list">${invList()}</div></div>`},
+ord(){
+ const ks=['All',...ST,'Cancelled'];
+ const L=S.orders.filter(o=>os==='All'||o.status===os);
+ return `<div class="tools">${ks.map(k=>`<button class="chip ${k===os?'on':''}" onclick="os='${k}';render()">${k}</button>`).join('')}</div>
+ <details class="card" style="margin-bottom:12px"><summary style="cursor:pointer;font-weight:600">Create an order</summary><div class="form" style="margin:12px 0 0">
+ <select id="o_type"><option>Sales</option><option>Purchase</option></select><input id="o_party" placeholder="Customer or supplier">
+ <select id="o_item">${S.items.map(i=>`<option value="${i.id}">${esc(i.name)}</option>`).join('')}</select>
+ <input id="o_qty" type="number" min="1" placeholder="Quantity"><input id="o_eta" type="date">
+ <button class="btn" onclick="addOrder()">Create order</button></div>
+ <small style="color:var(--mute)">Sales orders take stock out when shipped. Purchase orders add stock when delivered.</small></details>
+ ${L.length?L.map(orderCard).join(''):'<div class="card empty">No orders with this status.</div>'}`},
+cat(){
+ return `<div class="tools"><input id="c_name" placeholder="New category name"><button class="btn" onclick="addCat()">Add category</button></div>
+ <div class="grid cats">${S.cats.map(c=>{const L=S.items.filter(i=>i.cat===c),low=L.filter(i=>i.qty<=i.min).length;
+ return `<div class="card"><h2>${esc(c)}</h2><div class="row"><span>Products</span><b>${L.length}</b></div><div class="row"><span>Units in stock</span><b>${L.reduce((a,i)=>a+i.qty,0).toLocaleString()}</b></div><div class="row"><span>Stock value</span><b>${money(L.reduce((a,i)=>a+i.qty*i.price,0))}</b></div>
+ <div class="row" style="border:0"><span class="tag ${low?'warn':'ok'}">${low?low+' to reorder':'Healthy'}</span><span><button class="btn g s" onclick="fc='${esc(c).replace(/&amp;/g,'&')}';go('inv')">View</button> ${L.length?'':`<button class="btn d s" onclick="delCat('${esc(c).replace(/&amp;/g,'&')}')">Delete</button>`}</span></div></div>`}).join('')}</div>`},
+sup(){
+ return `<div class="tools"><input id="s_name" placeholder="Supplier name"><input id="s_lead" type="number" min="1" placeholder="Lead time (days)"><input id="s_ot" type="number" min="0" max="100" placeholder="On-time %"><button class="btn" onclick="addSup()">Add supplier</button></div>
+ <div class="card scroll"><table><tr><th>Supplier</th><th>Products</th><th>Lead time</th><th>On-time delivery</th><th>Open purchase orders</th></tr>
+ ${S.sup.map(s=>`<tr><td>${esc(s.n)}</td><td>${S.items.filter(i=>i.sup===s.n).length}</td><td>${s.lead} days</td><td><span class="tag ${s.ot>=95?'ok':s.ot>=90?'warn':'bad'}">${s.ot}%</span></td><td>${S.orders.filter(o=>o.type==='Purchase'&&o.party===s.n&&open(o)).length}</td></tr>`).join('')}</table></div>`}
+};
+function invList(){
+ const L=S.items.filter(i=>(fc==='All'||i.cat===fc)&&(i.name+i.id).toLowerCase().includes(q.toLowerCase()));
+ if(!L.length)return '<div class="empty">No products match. Clear the search or pick another category.</div>';
+ return `<table><tr><th>Product</th><th>Category</th><th>Stock</th><th>Reorder at</th><th>Unit price</th><th>Adjust</th></tr>`+L.map(i=>{const st=status(i);
+ return `<tr><td>${esc(i.name)}<small>${i.id} · ${esc(i.sup)}</small></td><td>${esc(i.cat)}</td>
+ <td><b>${i.qty}</b> <span class="tag ${st[1]}">${st[0]}</span><div class="lvl"><i class="${st[1]==='ok'?'':st[1]}" style="width:${Math.min(100,i.qty/Math.max(1,i.min*3)*100)}%"></i></div></td>
+ <td>${i.min}</td><td>${money(i.price)}</td>
+ <td><button class="btn g s" onclick="adj('${i.id}',-10)">−10</button> <button class="btn g s" onclick="adj('${i.id}',10)">+10</button> <button class="btn d s" onclick="delItem('${i.id}')">Remove</button></td></tr>`}).join('')+'</table>';
+}
+function orderCard(o){
+ const it=item(o.item),idx=ST.indexOf(o.status),canc=o.status==='Cancelled',next=ST[idx+1];
+ return `<div class="card order"><div class="ohead"><div><b>${o.id}</b> <span class="tag ${o.type==='Sales'?'info':'warn'}">${o.type}</span> ${esc(o.party)}<br><small style="color:var(--mute)">${o.qty} × ${esc(it?it.name:o.item)} · due ${o.eta||'not set'}</small></div>
+ <span class="tag ${canc?'bad':o.status==='Delivered'?'ok':'info'}">${o.status}</span></div>
+ ${canc?'':`<div class="steps">${ST.map((s,k)=>`<div class="${k<=idx?'done':''}"><u></u>${s}</div>`).join('')}</div>`}
+ ${open(o)?`<div class="oact"><button class="btn s" onclick="advance('${o.id}')">Mark as ${next}</button><button class="btn d s" onclick="cancelOrder('${o.id}')">Cancel order</button></div>`:''}</div>`;
+}
+function adj(id,d){const i=item(id);i.qty=Math.max(0,i.qty+d);save();$('#list').innerHTML=invList()}
+function delItem(id){S.items=S.items.filter(i=>i.id!==id);save();render()}
+function addItem(){
+ const name=val('n_name');if(!name){alert('Enter a product name.');return}
+ S.n++;S.items.push({id:'SKU-'+(S.n+1000),name,cat:val('n_cat'),sup:val('n_sup'),qty:+val('n_qty')||0,min:+val('n_min')||0,price:+val('n_price')||0});
+ save();render()}
+function addOrder(){
+ const party=val('o_party'),qty=+val('o_qty');if(!party||qty<1){alert('Enter who the order is with and a quantity of at least 1.');return}
+ S.n++;const t=val('o_type');
+ S.orders.unshift({id:(t==='Sales'?'SO-':'PO-')+S.n,type:t,party,item:val('o_item'),qty,status:'Placed',eta:val('o_eta')});
+ os='All';save();render()}
+function advance(id){
+ const o=S.orders.find(x=>x.id===id),it=item(o.item),next=ST[ST.indexOf(o.status)+1];if(!next)return;
+ if(it){if(o.type==='Sales'&&next==='Shipped')it.qty=Math.max(0,it.qty-o.qty);if(o.type==='Purchase'&&next==='Delivered')it.qty+=o.qty}
+ o.status=next;save();render()}
+function cancelOrder(id){if(confirm('Cancel order '+id+'?')){S.orders.find(x=>x.id===id).status='Cancelled';save();render()}}
+function reorder(id){
+ const i=item(id);S.n++;
+ S.orders.unshift({id:'PO-'+S.n,type:'Purchase',party:i.sup,item:id,qty:Math.max(i.min*2-i.qty,10),status:'Placed',eta:''});
+ save();view='ord';os='All';render()}
+function addCat(){const n=val('c_name');if(n&&!S.cats.includes(n)){S.cats.push(n);save();render()}}
+function delCat(c){S.cats=S.cats.filter(x=>x!==c);if(fc===c)fc='All';save();render()}
+function addSup(){const n=val('s_name');if(!n)return;S.sup.push({n,lead:+val('s_lead')||7,ot:+val('s_ot')||90});save();render()}
+render();
+</script>
+</body>
+</html>
